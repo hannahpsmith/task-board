@@ -14,3 +14,8 @@ body {
 .task-card:hover {
   cursor: grab;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
