@@ -2,9 +2,14 @@
 let taskList = JSON.parse(localStorage.getItem("tasks"));
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
+
+
 // Todo: create a function to generate a unique task id
 function generateTaskId() {
+    const timestamp = new Date().getTime();
+    counter++;
 
+    return `${timestamp}--${counter}`;
 }
 
 // Todo: create a function to create a task card
@@ -19,12 +24,15 @@ function renderTaskList() {
 
 // Todo: create a function to handle adding a new task
 function handleAddTask(event){
-
+   
 }
 
 // Todo: create a function to handle deleting a task
 function handleDeleteTask(event){
+    const btnClicked = $(event.target);
 
+    //or whatever li will be//
+    btnClicked.parent('li').remove();
 }
 
 // Todo: create a function to handle dropping a task into a new status lane
