@@ -99,20 +99,47 @@ function handleAddTask(event) {
     });
 }
 
-// Todo: create a function to handle deleting a task
+// Function to handle deleting a task
 function handleDeleteTask(event){
     const btnClicked = $(event.target);
-
-    //or whatever li will be//
-    btnClicked.parent('li').remove();
+    const taskId = btnClicked.closest('.task-card').data('id');
+    
+    // Remove task from the taskList array
+    taskList = taskList.filter(task => task.id !== taskId);
+    localStorage.setItem("tasks", JSON.stringify(taskList));
+    
+    // Remove task card from the DOM
+    btnClicked.closest('.task-card').remove();
 }
 
-// Todo: create a function to handle dropping a task into a new status lane
-function handleDrop(event, ui) {
 
+// Function to handle dropping a task into a new status lane
+function handleDrop(event, ui) {
+    const target = $(event.target).closest('.task-lane');
+    if (target.length) {
+        const newStatus = target.data('status');
+        const taskId = ui.helper.closest('.task-card').data('id');
+
+        let task = taskList.find(task => task.id === taskId);
+        if (task) {
+            task.status = newStatus;
+            localStorage.setItem("tasks", JSON.stringify(taskList));
+            renderTaskList();
+        }
+    }
 }
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
+    renderTaskList();
+    
+    $('#task-form').on('submit', handleAddTask);
+    $(document).on('click', '.delete-task-btn', handleDeleteTask);
+    
+     // Make lanes droppable
+     $('.task-lane').droppable({
+        accept: '.task-card',
+        drop: handleDrop
+    });
 
 });

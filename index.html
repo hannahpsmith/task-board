@@ -25,8 +25,8 @@
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Add Task</button>
     </div>
     <!-- modal with a form to add tasks -->
-    <div class="modal" tabindex="-1" role="dialog" id="formModal">
-      <div class="modal-dialog" role="document">
+    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">New Task</h5>
@@ -35,16 +35,24 @@
             </button>
           </div>
           <div class="modal-body">
-      <form id="">
-          <fieldset class="form">
-              <label for="title">Title:</label><input type="text" name="title" id="title">
-              <label for="description">Description:</label><textarea name="description" id="description"></textarea>
-              <label for="deadline">Deadline:</label><input type="date" name="deadline" id="deadline">
-          </fieldset>
-          
-      </form>
-    </div>
-    <div class="modal-footer">
+            <form id="task-form">
+              <fieldset class="form">
+                <div class="mb-3">
+                  <label for="task-title" class="form-label">Title:</label>
+                  <input type="text" name="title" id="task-title" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label for="task-desc" class="form-label">Description:</label>
+                  <textarea name="description" id="task-desc" class="form-control"></textarea>
+                </div>
+                <div class="mb-3">
+                  <label for="task-deadline" class="form-label">Deadline:</label>
+                  <input type="date" name="deadline" id="task-deadline" class="form-control">
+                </div>
+              </fieldset>
+            </form>
+         </div>
+        <div class="modal-footer">
       <button type="button" class="btn btn-primary">Save changes</button>
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     </div>
