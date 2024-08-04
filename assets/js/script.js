@@ -82,9 +82,6 @@ function handleAddTask(event) {
     let taskCard = createTaskCard(task);
     $('#todo-cards').append(taskCard);
 
-    $('#formModal').modal('hide');
-    $('#task-form')[0].reset();
-
     taskCard.draggable({
         revert: "invalid",
         helper: "clone",
@@ -128,6 +125,9 @@ function handleDrop(event, ui) {
         }
     }
 }
+
+$('#task-form')[0].reset();
+$('#formModal').modal('hide');
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function () {
