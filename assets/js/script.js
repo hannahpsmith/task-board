@@ -143,11 +143,11 @@ function handleDrop(event, ui) {
 $(document).ready(function () {
     renderTaskList();
 
-    $('#task-form').on('submit', handleAddTask);
+    $('#formModal').on('submit', handleAddTask);
     $(document).on('click', '.delete-task-btn', handleDeleteTask);
 
     // Make lanes droppable
-    $('.task-lane').droppable({
+    $('.lane').droppable({
         accept: '.task-card',
         drop: handleDrop
     });
