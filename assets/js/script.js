@@ -6,8 +6,9 @@ let nextId = JSON.parse(localStorage.getItem("nextId")) || 1;
 
 //function to generate a unique task id
 function generateTaskId() {
-    localStorage.setItem("nextId", nextId + 1);
-    return nextId++;
+    nextId++;
+    localStorage.setItem("nextId", nextId);
+    return nextId - 1;
 }
 
 // Function to create a task card
@@ -40,8 +41,7 @@ function renderTaskList() {
     $('#in-progress-cards').empty();
     $('#done-cards').empty();
 
-    for (let i = 0; i < taskList.length; i++) {
-        let task = taskList[i];
+    for (let task of taskList) {
         let taskCard = createTaskCard(task);
         if (task.status === 'to-do') {
             $('#todo-cards').append(taskCard);
@@ -52,7 +52,13 @@ function renderTaskList() {
         }
     }
 
-    // Initialize draggable
+    initializeDraggable();
+    initializeDroppable();
+}
+
+// Function to initialize draggable functionality
+function initializeDraggable() {
+
     $('.task-card').draggable({
         revert: "invalid",
         helper: "clone",
@@ -65,8 +71,10 @@ function renderTaskList() {
         },
         appendTo: 'body'
     });
+}
 
-    // Initialize droppable for lanes
+// Function to initialize droppable functionality
+function initializeDroppable() {
     $('.lane').droppable({
         accept: '.task-card',
         drop: handleDrop
@@ -86,7 +94,6 @@ function handleAddTask(event) {
 
     taskList.push(task);
     localStorage.setItem("tasks", JSON.stringify(taskList));
-    localStorage.setItem("nextId", JSON.stringify(nextId));
 
     let taskCard = createTaskCard(task);
     $('#todo-cards').append(taskCard);
@@ -94,40 +101,16 @@ function handleAddTask(event) {
     $('#task-form')[0].reset();
     $('#formModal').modal('hide');
 
-    taskCard.draggable({
-        revert: "invalid",
-        helper: "clone",
-        start: function (event, ui) {
-            $(this).hide();
-            ui.helper.css('z-index', 1000);
-        },
-        stop: function (event, ui) {
-            $(this).css('z-index', 1).show();
-        },
-        appendTo: 'body'
-    });
+    renderTaskList();
+    initializeDraggable();
 }
-
-// Function to handle deleting a task
-function handleDeleteTask(event){
-    const btnClicked = $(event.target);
-    const taskId = btnClicked.closest('.task-card').data('id');
-    
-    // Remove task from the taskList array
-    taskList = taskList.filter(task => task.id !== taskId);
-    localStorage.setItem("tasks", JSON.stringify(taskList));
-    
-    // Remove task card from the DOM
-    btnClicked.closest('.task-card').remove();
-}
-
 
 // Function to handle moving a task into a new status lane
 function handleDrop(event, ui) {
     const target = $(event.target).closest('.lane');
     if (target.length) {
-        const newStatus = target.find('.card-title').text().toLowerCase(); // 'to do', 'in progress', or 'done'
-        const taskId = ui.helper.closest('.task-card').data('id');
+        const newStatus = target.find('.card-title').text().toLowerCase().replace(' ', '-'); // 'to-do', 'in-progress', or 'done'
+        const taskId = ui.helper.data('id');
 
         let task = taskList.find(task => task.id === taskId);
         if (task) {
@@ -138,17 +121,23 @@ function handleDrop(event, ui) {
     }
 }
 
+// Function to handle deleting a task
+function handleDeleteTask(event) {
+    const btnClicked = $(event.target);
+    const taskId = btnClicked.closest('.task-card').data('id');
 
-// Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
+    // Remove task from the taskList array
+    taskList = taskList.filter(task => task.id !== taskId);
+    localStorage.setItem("tasks", JSON.stringify(taskList));
+
+    // Remove task card from the DOM
+    btnClicked.closest('.task-card').remove();
+}
+
 $(document).ready(function () {
     renderTaskList();
 
     $('#formModal').on('submit', handleAddTask);
-    $(document).on('click', '.delete-task-btn', handleDeleteTask);
 
-    // Make lanes droppable
-    $('.lane').droppable({
-        accept: '.task-card',
-        drop: handleDrop
-    });
+    $(document).on('click', '.delete-task-btn', handleDeleteTask);
 });
