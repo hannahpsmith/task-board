@@ -98,10 +98,9 @@ function handleAddTask(event) {
     let taskCard = createTaskCard(task);
     $('#todo-cards').append(taskCard);
 
-    $('#task-form')[0].reset();
+    $('#formModal')[0].reset();
     $('#formModal').modal('hide');
 
-    renderTaskList();
     initializeDraggable();
 }
 
